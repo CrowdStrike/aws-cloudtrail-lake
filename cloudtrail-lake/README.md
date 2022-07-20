@@ -6,9 +6,8 @@ Publish security relevant audit events identified by CrowdStrike Falcon to AWS C
   + [Architecture](#architecture)
   + [Data Flow](#data-flow)
 + [Getting Started](#getting-started)
-  + [Requirements](#requirements)
-  + [Configuration](#configuring-the-application)
-+ [Troubleshooting](#troubleshooting)
+  + [Deployment](#deployment)
+
 ## Overview
 This integration provides CrowdStrike Falcon and AWS CloudTrail Lake consumers the ability to log and store
 user activity data from CrowdStrike Falcon using AWS CloudTrail Open Audit Events. This is accomplished by tapping
@@ -43,5 +42,6 @@ these events are published to the event stream, which are then consumed by the F
 * A CrowdStrike partner integration in AWS CloudTrail Lake
 
 ### Deployment
-The Deployment guide for this integration is hosted in the [Falcon Integration Gateway](https://github.com/CrowdStrike/Falcon-Integration-Gateway) repository.
-> The 
+[AWS CloudTrail Lake Deployment Guide](https://github.com/CrowdStrike/falcon-integration-gateway/blob/main/docs/cloudtrail-lake) is hosted in the
+[Falcon Integration Gateway](https://github.com/CrowdStrike/Falcon-Integration-Gateway) repository. This
+repository contains information regarding the FIG which may provide you with additional context if needed.
