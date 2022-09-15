@@ -1,14 +1,15 @@
 # AWS CloudTrail Lake Integration
-Publish security relevant audit events identified by CrowdStrike Falcon to AWS CloudTrail Lake.
+AWS and CrowdStrike teamed to deliver this integration for AWS CloudTrail Lake that allows you to simplify and streamline the process of consolidating activity data from CrowdStrike Falcon. This integration enables enhanced visibility across environments and applications.
 
 ## Table of Contents
-+ [Overview](#overview)
-  + [Architecture](#architecture)
-  + [Data Flow](#data-flow)
-+ [Getting Started](#getting-started)
-  + [Requirements](#requirements)
-  + [Configuration](#configuring-the-application)
-+ [Troubleshooting](#troubleshooting)
+* [Overview](#overview)
+  * [Architecture](#architecture)
+  * [Data Flow](#data-flow)
+* [Getting Started](#getting-started)
+  * [Prerequisites:](#prerequisites)
+      * [General](#general)
+      * [Create IAM Role](#create-iam-role)
+  * [Deployment Strategies](#deployment-strategies)
 ## Overview
 This integration provides CrowdStrike Falcon and AWS CloudTrail Lake consumers the ability to log and store
 user activity data from CrowdStrike Falcon using AWS CloudTrail Open Audit Events. This is accomplished by tapping
@@ -16,14 +17,20 @@ into the CrowdStrike Falcon *event-stream* API, watching for relevant user activ
 these events to AWS CloudTrail Lake.
 
 ### Architecture
-The AWS CloudTrail Lake integration consists of one primary component:
+The AWS CloudTrail Lake integration consists of the following components:
 * The Falcon Integration Gateway Python application used for ingesting events from the CrowdStrike API
   > This application is commonly referred to as the FIG
+* AWS SSM Parameter Store
+  > This is used to keep track of event offsets with the `last_seen_offsets` parameter. This parameter
+  will be created for you and used to prevent sending duplicate events.
+* AWS CloudTrail Lake - Event Data Store(s)
+  > The FIG requires a Channel ARN in order to route the events to the correct EDS.
 
-![AWS CloudTrail FIG Architectural Diagram](./images/aws-cloudtrail-lake-architecture.png)
+![AWS CloudTrail FIG Architectural Diagram](./assets/aws-cloudtrail-lake-architecture.png)
 
 ### Data Flow
-1. The FIG application contacts the CrowdStrike Falcon API to request a list of available event streams.
+1. The FIG application fetches the `last_seen_offsets` SSM parameter to ensure duplicate events aren't sent. The FIG then contacts the CrowdStrike Falcon API to request a list of available event streams.
+    > If the `last_seen_offsets` SSM parameter does not exist, it will be created the first time it is ran.
 2. A connection is opened to each available event stream. As new events are received within CrowdStrike,
 these events are published to the event stream, which are then consumed by the FIG application.
 3. The FIG application:
@@ -33,15 +40,50 @@ these events are published to the event stream, which are then consumed by the F
     3. Publishes transformed events into AWS CloudTrail Lake.
         > The destination is determined by the *Channel* resource from creating an Event Data Store in
         AWS CloudTrail Lake.
+4. As events are successfully published to CloudTrail Lake, the FIG updates the `last_seen_offsets` SSM parameter.
 ----------
 
 ## Getting Started
-
-
 ### Prerequisites:
+#### General
 * Have a current CrowdStrike Subscription
-* A CrowdStrike partner integration in AWS CloudTrail Lake
+* Have appropriate AWS permissions to run CloudFormation and/or create resources
+* The Channel ARN from the CrowdStrike Partner Integration in AWS CloudTrail Lake
+  > This sets up the Channel used to ingest events.
 
-### Deployment
-The Deployment guide for this integration is hosted in the [Falcon Integration Gateway](https://github.com/CrowdStrike/Falcon-Integration-Gateway) repository.
-> The 
+#### Create IAM Role
+In order to use this integration, create an IAM role with the least privileges needed to send data to
+CloudTrail Lake. We have provided the following methods:
+1. A [CloudFormation template](./assets/cs-integration-policy.yaml)
+    > The Policy ARN is an output
+2. Create a role with the following permissions:
+    <details>
+      <summary>Click to expand</summary>
+
+      ```json
+      {
+          "Version": "2012-10-17",
+          "Statement": [
+              {
+                  "Action": "cloudtrail-data:PutAuditEvents",
+                  "Resource": "*",
+                  "Effect": "Allow"
+              },
+              {
+                  "Action": [
+                      "ssm:PutParameter",
+                      "ssm:GetParameter"
+                  ],
+                  "Resource": "*",
+                  "Effect": "Allow"
+              }
+          ]
+      }
+      ```
+    </details>
+
+    > **Make note of the Policy ARN after policy is created**
+
+### Deployment Strategies
+
+The Deployment guide for this integration is hosted in the [Falcon Integration Gateway](https://github.com/CrowdStrike/Falcon-Integration-Gateway/docs/cloudtrail-lake) repository.
