@@ -99,7 +99,7 @@ Regardless of which deployment method you choose, the following values should be
     - Channel ARN
     - AWS Region associated with the Channel
 
-**Prior to Deployment, please familiarize yourself with the available FIG [Configuration](https://github.com/CrowdStrike/falcon-integration-gateway/tree/main/config) options.**
+**Prior to Deployment, please familiarize yourself with the available FIG [Configuration](https://github.com/CrowdStrike/falcon-integration-gateway/tree/main/config/config.ini) options.**
 
 
 ### [Deployment to EKS](https://github.com/CrowdStrike/falcon-integration-gateway/tree/main/docs/cloudtrail-lake/eks)
