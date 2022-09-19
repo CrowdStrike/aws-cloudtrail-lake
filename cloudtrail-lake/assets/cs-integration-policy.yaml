@@ -13,6 +13,9 @@ Parameters:
     Type: String
     Description: The name of the policy to create for the FIG integration.
     Default: 'cs-lake-integration-policy'
+  ChannelARN:
+    Type: String
+    Description: The Channel ARN from the CrowdStrike Partner Integration in AWS CloudTrail Lake.
 
 Resources:
   CSIntegrationPolicy:
@@ -26,7 +29,7 @@ Resources:
         Statement:
           - Effect: "Allow"
             Action: "cloudtrail-data:PutAuditEvents"
-            Resource: "*"
+            Resource: !Ref ChannelARN
           - Effect: "Allow"
             Action:
               - "ssm:PutParameter"

@@ -6,9 +6,8 @@ AWS and CrowdStrike teamed to deliver this integration for AWS CloudTrail Lake t
   * [Architecture](#architecture)
   * [Data Flow](#data-flow)
 * [Getting Started](#getting-started)
-  * [Prerequisites:](#prerequisites)
-      * [General](#general)
-      * [Create IAM Role](#create-iam-role)
+  * [Prerequisites](#prerequisites)
+  * [Create IAM Role](#create-iam-role)
   * [Deployment Strategies](#deployment-strategies)
 ## Overview
 This integration provides CrowdStrike Falcon and AWS CloudTrail Lake consumers the ability to log and store
@@ -45,45 +44,65 @@ these events are published to the event stream, which are then consumed by the F
 
 ## Getting Started
 ### Prerequisites:
-#### General
 * Have a current CrowdStrike Subscription
 * Have appropriate AWS permissions to run CloudFormation and/or create resources
 * The Channel ARN from the CrowdStrike Partner Integration in AWS CloudTrail Lake
   > This sets up the Channel used to ingest events.
+- Have a CrowdStrike API Key Pair
 
-#### Create IAM Role
-In order to use this integration, create an IAM role with the least privileges needed to send data to
-CloudTrail Lake. We have provided the following methods:
-1. A [CloudFormation template](./assets/cs-integration-policy.yaml)
+    This key pair will be used to read falcon events and supplementary information from CrowdStrike Falcon.
+    > If you need to create a new API key pair, review our docs: [CrowdStrike Falcon](https://falcon.crowdstrike.com/support/api-clients-and-keys).
+
+    Make sure only the following permissions are assigned to the key pair:
+    * Event streams: READ
+    * Hosts: READ
+
+### Create IAM Managed Policy
+In order to use this integration, create an IAM Managed Policy using the Channel ARN to send data to
+CloudTrail Lake.
+
+Below are 2 ways to accomplish this:
+- A [CloudFormation template](./assets/cs-integration-policy.yaml)
     > The Policy ARN is an output
-2. Create a role with the following permissions:
-    <details>
-      <summary>Click to expand</summary>
-
-      ```json
-      {
-          "Version": "2012-10-17",
-          "Statement": [
-              {
-                  "Action": "cloudtrail-data:PutAuditEvents",
-                  "Resource": "*",
-                  "Effect": "Allow"
-              },
-              {
-                  "Action": [
-                      "ssm:PutParameter",
-                      "ssm:GetParameter"
-                  ],
-                  "Resource": "*",
-                  "Effect": "Allow"
-              }
-          ]
-      }
-      ```
-    </details>
+- Or, you can manually create a Managed Policy with the following permissions:
+    ```json
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Action": "cloudtrail-data:PutAuditEvents",
+                "Resource": "<Channel ARN>",
+                "Effect": "Allow"
+            },
+            {
+                "Action": [
+                    "ssm:PutParameter",
+                    "ssm:GetParameter"
+                ],
+                "Resource": "*",
+                "Effect": "Allow"
+            }
+        ]
+    }
+    ```
 
     > **Make note of the Policy ARN after policy is created**
 
-### Deployment Strategies
+## Deployment Strategies
+Regardless of which deployment method you choose, the following values should be known ahead of time:
 
-The Deployment guide for this integration is hosted in the [Falcon Integration Gateway](https://github.com/CrowdStrike/Falcon-Integration-Gateway/docs/cloudtrail-lake) repository.
+- ***Falcon API Credentials***:
+    - Falcon Client ID
+    - Falcon Client Secret
+    - Falcon Client Region
+- ***CloudTrail Lake***:
+    - Channel ARN
+    - AWS Region associated with the Channel
+
+**Prior to Deployment, please familiarize yourself with the available FIG [Configuration](https://github.com/CrowdStrike/falcon-integration-gateway/tree/main/config) options.**
+
+
+### [Deployment to EKS](https://github.com/CrowdStrike/falcon-integration-gateway/tree/main/docs/cloudtrail-lake/eks)
+> Deploy FIG on EKS with Helm chart or Kube spec
+### [Manual Deployment](https://github.com/CrowdStrike/falcon-integration-gateway/tree/main/docs/cloudtrail-lake/manual)
+> Deploy FIG via Docker
