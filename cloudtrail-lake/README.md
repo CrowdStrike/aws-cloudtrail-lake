@@ -55,14 +55,13 @@ these events are published to the event stream, which are then consumed by the F
 
     Make sure only the following permissions are assigned to the key pair:
     * Event streams: READ
-    * Hosts: READ
 
 ### Create IAM Managed Policy
 In order to use this integration, create an IAM Managed Policy using the Channel ARN to send data to
 CloudTrail Lake.
 
 Below are 2 ways to accomplish this:
-- A [CloudFormation template](./assets/cs-integration-policy.yaml)
+- Launch a CloudFormation Stack using our [CloudFormation template](./assets/cs-integration-policy.yaml)
     > The Policy ARN is an output
 - Or, you can manually create a Managed Policy with the following permissions:
     ```json
