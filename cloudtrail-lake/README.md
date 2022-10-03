@@ -45,7 +45,7 @@ these events are published to the event stream, which are then consumed by the F
 ## Getting Started
 ### Prerequisites:
 * Have a current CrowdStrike Subscription
-* Have appropriate AWS permissions to run CloudFormation and/or create resources
+* Have appropriate AWS permissions to run CloudFormation and create resources
 * The Channel ARN from the CrowdStrike Partner Integration in AWS CloudTrail Lake
   > This sets up the Channel used to ingest events.
 - Have a CrowdStrike API Key Pair
@@ -53,12 +53,27 @@ these events are published to the event stream, which are then consumed by the F
     This key pair will be used to read falcon events and supplementary information from CrowdStrike Falcon.
     > If you need to create a new API key pair, review our docs: [CrowdStrike Falcon](https://falcon.crowdstrike.com/support/api-clients-and-keys).
 
-    Make sure only the following permissions are assigned to the key pair:
+    Make sure to assign only the following permissions to the key pair:
     * Event streams: READ
 
-### Create IAM Managed Policy
-In order to use this integration, create an IAM Managed Policy using the Channel ARN to send data to
+### Deployment
+The quickest deployment option is to deploy the Falcon Integration Gateway application via AWS ECS. With one CloudFormation template,
+we can take advantage of the serverless architecture via ECS Fargate to run our containerized application.
+> For more ways to deploy the FIG, see [Other Deployment Options](#other-deployment-options) below.
+
+#### Step 1: Download the CloudFormation Template
+Right Click [here](./assets/fig-ecs-lake-deployment.yaml?raw=1) and *Save Link As..*.
+> :exclamation: Ensure you save the file with .yaml or .yml extension
+
+#### Step 2:
+#### Step 3:
+
+
+### Other Deployment Options
+In order to use this integration with other deployment options, create an IAM Managed Policy using the Channel ARN to send data to
 CloudTrail Lake.
+
+#### Step 1: Create IAM Managed Policy
 
 Below are 2 ways to accomplish this:
 - Launch a CloudFormation Stack using our [CloudFormation template](./assets/cs-integration-policy.yaml)
@@ -87,7 +102,7 @@ Below are 2 ways to accomplish this:
 
     > **Make note of the Policy ARN after policy is created**
 
-## Deployment Strategies
+#### Step 2: Choose Deployment Option
 Regardless of which deployment method you choose, the following values should be known ahead of time:
 
 - ***Falcon API Credentials***:
@@ -97,6 +112,7 @@ Regardless of which deployment method you choose, the following values should be
 - ***CloudTrail Lake***:
     - Channel ARN
     - AWS Region associated with the Channel
+- ***Policy ARN***
 
 **Prior to Deployment, please familiarize yourself with the available FIG [Configuration](https://github.com/CrowdStrike/falcon-integration-gateway/tree/main/config/config.ini) options.**
 
