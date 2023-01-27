@@ -120,7 +120,7 @@ Right Click [here](./assets/fig-ecs-lake-deployment.yaml?raw=1) and *Save Link A
 
 1. Navigate to the [AWS CloudFormation](https://console.aws.amazon.com/cloudformation/home) console.
 1. Ensure you are in the correct region
-    > :exclamation: Ensure you are in the same region where your VPC and Subnet are located, as well as where your Secrets Manager secret is located.
+   > :exclamation: CloudFormation is a regional service. This should be the region where your VPC/Subnet and Secrets Manager secret are located.
 1. Select *Create stack*
    1. Select *With new resources (standard)*
 1. Select *Upload a template file*
@@ -135,7 +135,7 @@ Right Click [here](./assets/fig-ecs-lake-deployment.yaml?raw=1) and *Save Link A
 From the CloudFormation console, you can view the status of the stack deployment. Once the stack is in a *CREATE_COMPLETE* state, we can take advantage of the CloudWatch logs set by ECS to verify the FIG is running successfully.
 1. In the AWS CloudFormation console, select the stack you just created.
 1. Select the *Outputs* tab
-   1. Make note of the `FIGLakeLogGroup` value
+   1. Copy and save the `FIGLakeLogGroup` value
 1. Navigate to the [AWS CloudWatch](https://console.aws.amazon.com/cloudwatch/home) console.
 1. Select *Logs* -> *Log groups*
    1. Paste the `FIGLakeLogGroup` value from the CloudFormation Outputs into the search bar and select the log group
