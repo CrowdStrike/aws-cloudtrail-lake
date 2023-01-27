@@ -142,7 +142,7 @@ From the CloudFormation console, you can view the status of the stack deployment
    1. Under *Log streams*, select the most recent log stream
 
 A successful deployment will have a similar log output:
-```json
+```log
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 |   timestamp   |                                                                        message                                                                         |
 |---------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
