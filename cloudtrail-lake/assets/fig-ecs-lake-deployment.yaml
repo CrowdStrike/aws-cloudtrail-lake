@@ -94,7 +94,7 @@ Resources:
       Family: fig-lake-integration-task
       ContainerDefinitions:
         - Name: fig-lake-integration-container
-          Image: quay.io/matosc15/falcon-integration-gateway:latest-cloudtrail-lake
+          Image: quay.io/crowdstrike/falcon-integration-gateway:latest
           Environment:
             - Name: FALCON_CLIENT_ID
               Value: !Sub '{{resolve:secretsmanager:${FalconAPISecrets}:SecretString:${FalconAPISecretsClientID}}}'

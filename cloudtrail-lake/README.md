@@ -131,6 +131,9 @@ Right Click [here](./assets/fig-ecs-lake-deployment.yaml?raw=1) and *Save Link A
 1. Select *Next*
 1. Select *I acknowledge that AWS CloudFormation might create IAM resources.*
    1. Select *Submit*
+
+> This will take a few minutes to deploy. You can monitor the progress in the CloudFormation console.
+
 #### Step 4: Verify Deployment
 From the CloudFormation console, you can view the status of the stack deployment. Once the stack is in a *CREATE_COMPLETE* state, we can take advantage of the CloudWatch logs set by ECS to verify the FIG is running successfully.
 1. In the AWS CloudFormation console, select the stack you just created.
