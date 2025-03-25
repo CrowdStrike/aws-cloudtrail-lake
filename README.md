@@ -1,3 +1,6 @@
+> [!CAUTION]
+> This repository is deprecated. Please go to [https://github.com/CrowdStrike/Cloud-AWS/tree/main/cloudtrail-lake](https://github.com/CrowdStrike/Cloud-AWS/tree/main/cloudtrail-lake) to see the latest supported solution version. 
+
 # AWS CloudTrail Lake Integration
 AWS and CrowdStrike teamed to deliver this integration for AWS CloudTrail Lake that allows you to simplify and streamline the process of consolidating user activity data from CrowdStrike Falcon. With this integration, you gain unparalleled visibility into all user-relevant security activity within the Falcon console, including user creation, deletion, or modification, role changes, and authentication failures.
 
